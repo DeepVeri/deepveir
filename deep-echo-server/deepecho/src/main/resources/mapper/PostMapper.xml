@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deepecho.mapper.PostMapper">
+
+    <insert id="insertPost" parameterType="com.deepecho.entity.Post">
+        INSERT INTO posts (id, user_id, content, image_url, like_count, comment_count, share_count, hot_count, status, created_at, updated_at)
+        VALUES (#{id}, #{userId}, #{content}, #{imageUrl}, #{likeCount}, #{commentCount}, #{shareCount}, #{hotCount}, #{status}, NOW(), NOW())
+    </insert>
+
+    <select id="findAll" resultMap="PostResultMap">
+        SELECT p.*, u.username, u.nickname, u.avatar
+        FROM posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.status = 1
+        ORDER BY p.created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="findByUserId" resultType="com.deepecho.entity.Post">
+        SELECT p.*, u.username, u.nickname, u.avatar
+        FROM posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.user_id = #{userId} AND p.status = 1
+        ORDER BY p.created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM posts WHERE status = 1
+    </select>
+
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*) FROM posts WHERE user_id = #{userId} AND status = 1
+    </select>
+
+    <select id="findById" resultType="com.deepecho.entity.Post">
+        SELECT p.*, u.username, u.nickname, u.avatar
+        FROM posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.id = #{id} AND p.status = 1
+    </select>
+
+    <update id="updatePost" parameterType="com.deepecho.entity.Post">
+        UPDATE posts SET content = #{content}, image_url = #{imageUrl}, updated_at = NOW() WHERE id = #{id}
+    </update>
+
+    <delete id="deletePost" parameterType="string">
+        DELETE FROM posts WHERE id = #{id}
+    </delete>
+
+    <update id="updateHotCount" parameterType="map">
+        UPDATE posts SET hot_count = #{hotCount} WHERE id = #{id}
+    </update>
+
+    <resultMap id="PostResultMap" type="com.deepecho.entity.Post">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="shareCount" column="share_count"/>
+        <result property="hotCount" column="hot_count"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
+        <result property="avatar" column="avatar"/>
+    </resultMap>
+
+</mapper>

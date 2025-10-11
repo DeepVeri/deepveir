@@ -1,0 +1,44 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/deepecho?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hibernate:
+      use-new-id-generator-mappings: false
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+app:
+  jwt:
+    secret: ${secret}
+    expireTime: 3600000  # 5秒
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.deepecho.models
+  configuration:
+    map-underscore-to-camel-case: true
+
+avatar:
+  upload:
+    path: ${user.dir}/uploads/avatars
+  max:
+    width: 800
+    height: 800
+
+aliyun:
+  oss:
+    endpoint: ${endpoint}
+    accessKeyId: ${accessKeyId}
+    accessKeySecret: ${accessKeySecret}
+    bucketName:  ${bucketName}
